@@ -5,4 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: cat scripts/README.md
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - run: python build_oval_definitions_file.py --all_definitions --outfile ./files/oval.xml
