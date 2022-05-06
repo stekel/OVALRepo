@@ -9,4 +9,5 @@ jobs:
         with:
           python-version: '3.x'
           architecture: 'x64'
-      - run: python build_oval_definitions_file.py --all_definitions --outfile ./files/oval.xml
+      - run: python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./files/oval.xml
+      - run: ls -lah
