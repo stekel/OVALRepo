@@ -15,10 +15,13 @@ jobs:
       - run: | 
           python -m pip install -r scripts/requirements.txt
           mkdir ./output-files
-          for directory in ./repository/definitions/*; do
+          cd repository/definitions;
+          for directory in *; do
             if [ -d "$directory" ]; then
-                echo "python ./scripts/build_oval_definitions_file.py --outfile=5.10/$directory/ubuntu.xml --max_schema_version=5.10 --platform=ubuntu --class=$directory";
+                echo "python ../../scripts/build_oval_definitions_file.py --outfile=5.10/$directory/ubuntu.xml --max_schema_version=5.10 --platform=ubuntu --class=$directory";
+                echo "python ../../scripts/build_oval_definitions_file.py --outfile=5.11.1/$directory/ubuntu.xml --max_schema_version=5.11.1 --platform=ubuntu --class=$directory";
+                echo "python ../../scripts/build_oval_definitions_file.py --outfile=5.11.2/$directory/ubuntu.xml --max_schema_version=5.11.2 --platform=ubuntu --class=$directory";
             fi
           done
           # python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
-          ls -lah
+          ls -lah output-files
