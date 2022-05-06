@@ -12,6 +12,11 @@ jobs:
         with:
           python-version: '3.x'
           architecture: 'x64'
-      - run: python -m pip install -r scripts/requirements.txt
-      - run: python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./files/oval.xml
-      - run: ls -lah
+      - run: | 
+          python -m pip install -r scripts/requirements.txt
+          mkdir ./output-files
+          for directory in */repository/definitions/ ; do
+            echo "$directory"
+          done
+          # python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
+          ls -lah
