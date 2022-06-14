@@ -22,7 +22,7 @@ jobs:
           for platform in $(cat platforms.json | jq '.RESULTS.platforms | keys'); do
             echo "$platform"
             echo "Build OVAL Definitions Files for $platform"
-            for directory in (ls ./repository/definitions); do
+            for directory in $(ls ./repository/definitions); do
               if [ -d "$directory" ]; then
                   echo "python ./scripts/build_oval_definitions_file.py --outfile=./output-files/5.10/$directory/$platform.xml --max_schema_version=5.10 --platform=$platform --class=$directory";
                   echo "python ./scripts/build_oval_definitions_file.py --outfile=./output-file/5.11.1/$directory/$platform.xml --max_schema_version=5.11.1 --platform=$platform --class=$directory";
