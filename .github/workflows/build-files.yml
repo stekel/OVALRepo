@@ -19,7 +19,7 @@ jobs:
           python ./scripts/web_update_indexes.py > /dev/null
           echo "Get Platform Stats"
           python ./scripts/web_get_repository_stats.py --platform > platforms.json
-          for platform in $(cat platforms.json | jq '.RESULTS.platforms | keys'); do
+          for platform in $(cat platforms.json | jq '.RESULTS.platforms | keys[]'); do
             echo "$platform"
             echo "Build OVAL Definitions Files for $platform"
             for directory in $(ls ./repository/definitions); do
@@ -32,7 +32,6 @@ jobs:
             done
           done
           
-          cd ../../
           echo "Build All OVAL Definitions File"
           # python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
           ls -lah ./output-files
