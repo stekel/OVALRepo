@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - run: sudo apt install -y python3-lxml
+      - run: sudo apt install -y python3-lxml jq
       - uses: actions/setup-python@v3
         with:
           python-version: '3.x'
@@ -18,7 +18,11 @@ jobs:
           echo "Update Web Indexes"
           python ./scripts/web_update_indexes.py > /dev/null
           echo "Get Platform Stats"
-          python ./scripts/web_get_repository_stats.py --platform
+          python ./scripts/web_get_repository_stats.py --platform > platforms.json
+          for platform in (cat platforms.json | jq '.RESULTS.platforms | keys') do
+            echo "$platform"
+          done
+          
           echo "Build OVAL Definitions Files"
           cd repository/definitions;
           for directory in *; do
@@ -28,6 +32,7 @@ jobs:
                 echo "python ../../scripts/build_oval_definitions_file.py --outfile=5.11.2/$directory/ubuntu.xml --max_schema_version=5.11.2 --platform=ubuntu --class=$directory";
             fi
           done
+          cd ../../
           echo "Build All OVAL Definitions File"
           # python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
           ls -lah output-files
