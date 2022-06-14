@@ -23,5 +23,6 @@ jobs:
                 echo "python ../../scripts/build_oval_definitions_file.py --outfile=5.11.2/$directory/ubuntu.xml --max_schema_version=5.11.2 --platform=ubuntu --class=$directory";
             fi
           done
+          python ../../scripts/web_get_repository_stats.py --platform
           # python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
           ls -lah output-files
