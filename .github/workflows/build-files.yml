@@ -23,6 +23,7 @@ jobs:
             echo "$platform"
             echo "Build OVAL Definitions Files for $platform"
             for directory in $(ls ./repository/definitions); do
+              echo "$directory"
               if [ -d "$directory" ]; then
                   echo "python ./scripts/build_oval_definitions_file.py --outfile=./output-files/5.10/$directory/$platform.xml --max_schema_version=5.10 --platform=$platform --class=$directory";
                   echo "python ./scripts/build_oval_definitions_file.py --outfile=./output-file/5.11.1/$directory/$platform.xml --max_schema_version=5.11.1 --platform=$platform --class=$directory";
@@ -34,4 +35,20 @@ jobs:
           cd ../../
           echo "Build All OVAL Definitions File"
           # python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
-          ls -lah output-files
+          ls -lah ./output-files
+          zip build.zip ./output-files
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+          artifacts: "build.zip"
