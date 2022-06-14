@@ -15,6 +15,11 @@ jobs:
       - run: | 
           python -m pip install -r scripts/requirements.txt
           mkdir ./output-files
+          echo "Update Web Indexes"
+          python ../../scripts/web_update_indexes.py > /dev/null
+          echo "Get Platform Stats"
+          python ../../scripts/web_get_repository_stats.py --platform
+          echo "Build OVAL Definitions Files"
           cd repository/definitions;
           for directory in *; do
             if [ -d "$directory" ]; then
@@ -23,7 +28,6 @@ jobs:
                 echo "python ../../scripts/build_oval_definitions_file.py --outfile=5.11.2/$directory/ubuntu.xml --max_schema_version=5.11.2 --platform=ubuntu --class=$directory";
             fi
           done
-          python ../../scripts/web_update_indexes.py > /dev/null
-          python ../../scripts/web_get_repository_stats.py --platform
+          echo "Build All OVAL Definitions File"
           # python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
           ls -lah output-files
