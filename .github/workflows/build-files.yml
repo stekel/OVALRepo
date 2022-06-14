@@ -16,9 +16,9 @@ jobs:
           python -m pip install -r scripts/requirements.txt
           mkdir ./output-files
           echo "Update Web Indexes"
-          python ../../scripts/web_update_indexes.py > /dev/null
+          python ./scripts/web_update_indexes.py > /dev/null
           echo "Get Platform Stats"
-          python ../../scripts/web_get_repository_stats.py --platform
+          python ./scripts/web_get_repository_stats.py --platform
           echo "Build OVAL Definitions Files"
           cd repository/definitions;
           for directory in *; do
