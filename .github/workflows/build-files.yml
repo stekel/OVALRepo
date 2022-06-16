@@ -24,7 +24,7 @@ jobs:
           echo "Get Platform Stats"
           python ./scripts/web_get_repository_stats.py --platform > platforms.json
           cat platforms.json
-          echo arr($(cat platforms.json | jq '.RESULTS.platforms | keys[]'));
+          echo arr=($(cat platforms.json | jq '.RESULTS.platforms | keys[]'));
           for platform in arr=($(cat platforms.json | jq '.RESULTS.platforms | keys[]')); do
             echo "Build OVAL Definitions Files for $platform"
             for directory in $(ls ./repository/definitions); do
