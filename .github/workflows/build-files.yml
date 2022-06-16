@@ -26,11 +26,11 @@ jobs:
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
             echo "Build OVAL Definitions Files for $platform"
             for directory in $(ls ./repository/definitions); do
-              #if [ -d "$directory" ]; then
+              if [ -d "./repository/definitions/$directory" ]; then
                   python ./scripts/build_oval_definitions_file.py --outfile=./output-files/5.10/$directory/$platform.xml --max_schema_version=5.10 --platform=$platform --class=$directory
                   python ./scripts/build_oval_definitions_file.py --outfile=./output-file/5.11.1/$directory/$platform.xml --max_schema_version=5.11.1 --platform=$platform --class=$directory
                   python ./scripts/build_oval_definitions_file.py --outfile=./output-files/5.11.2/$directory/$platform.xml --max_schema_version=5.11.2 --platform=$platform --class=$directory
-              #fi
+              fi
             done
           done
           
@@ -47,4 +47,4 @@ jobs:
           artifacts: "build.zip"
           bodyFile: "body.md"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "v1.3"
+          tag: "v1.4"
