@@ -25,6 +25,7 @@ jobs:
         run: |
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
             echo "Build OVAL Definitions Files for $platform"
+            echo "$directory"
             for directory in $(ls ./repository/definitions); do
               if [ -d "$directory" ]; then
                   python ./scripts/build_oval_definitions_file.py --outfile=./output-files/5.10/$directory/$platform.xml --max_schema_version=5.10 --platform=$platform --class=$directory
