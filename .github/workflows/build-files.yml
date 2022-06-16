@@ -14,13 +14,17 @@ jobs:
         with:
           python-version: '3.x'
           architecture: 'x64'
-      - run: | 
+      - name: Build Web Indexes
+        run: | 
           python -m pip install -r scripts/requirements.txt
           mkdir ./output-files
-          echo "Update Web Indexes"
           python ./scripts/web_update_indexes.py > /dev/null
+      - name: Build Files
+        run: |
           echo "Get Platform Stats"
           python ./scripts/web_get_repository_stats.py --platform > platforms.json
+          cat platforms.json
+          echo $(cat platforms.json | jq '.RESULTS.platforms | keys[]');
           for platform in $(cat platforms.json | jq '.RESULTS.platforms | keys[]'); do
             echo "Build OVAL Definitions Files for $platform"
             for directory in $(ls ./repository/definitions); do
@@ -45,4 +49,4 @@ jobs:
           artifacts: "build.zip"
           bodyFile: "body.md"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "v1.1"
+          tag: "v1.2"
