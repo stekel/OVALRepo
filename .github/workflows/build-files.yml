@@ -19,12 +19,10 @@ jobs:
           python -m pip install -r scripts/requirements.txt
           mkdir ./output-files
           python ./scripts/web_update_indexes.py > /dev/null
+      - name: Get All Platforms
+        run: python ./scripts/web_get_repository_stats.py --platform > platforms.json
       - name: Build Files
         run: |
-          echo "Get Platform Stats"
-          python ./scripts/web_get_repository_stats.py --platform > platforms.json
-          cat platforms.json
-          echo arr=($(cat platforms.json | jq '.RESULTS.platforms | keys[]'));
           for platform in arr=($(cat platforms.json | jq '.RESULTS.platforms | keys[]')); do
             echo "Build OVAL Definitions Files for $platform"
             for directory in $(ls ./repository/definitions); do
