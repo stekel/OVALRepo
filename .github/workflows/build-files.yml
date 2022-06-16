@@ -35,7 +35,7 @@ jobs:
           echo "Build All OVAL Definitions File"
           python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
           ls -lah ./output-files
-          zip build.zip ./output-files
+          zip -r build.zip ./output-files
           echo "Release!" > body.md
       - name: Create Release
         uses: ncipollo/release-action@v1
@@ -45,4 +45,4 @@ jobs:
           artifacts: "build.zip"
           bodyFile: "body.md"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "v1.0"
+          tag: "v1.1"
