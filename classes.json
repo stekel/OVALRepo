@@ -1,0 +1,16 @@
+{
+    "MESSAGES": [
+        {
+            "TIME": "00:00:00"
+        }
+    ],
+    "RESULTS": {
+        "class": {
+            "compliance": 70,
+            "inventory": 4402,
+            "miscellaneous": 8,
+            "patch": 12022,
+            "vulnerability": 20171
+        }
+    }
+}
