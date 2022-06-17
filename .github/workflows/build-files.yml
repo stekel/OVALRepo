@@ -1,5 +1,8 @@
 name: build-oval-files
-on: [push]
+on:
+  push:
+    branches:
+      - master
 jobs:
   build-xml-files:
     runs-on: ubuntu-latest
@@ -25,7 +28,7 @@ jobs:
         run: |
           mkdir ./output-files
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
-            platform=${sed -i 's/\"//g' $platform}
+            platform=${sed -e 's/^"//' -e 's/"$//' <<<"$platform" }
             echo "Build OVAL Definitions Files for $platform"
             if [ ! -z "$platform" ]; then
               for directory in $(ls ./repository/definitions); do
@@ -43,6 +46,15 @@ jobs:
           ls -lah ./output-files
           zip -r build.zip ./output-files
           echo "Release!" > body.md
+      - name: Get Last Release Version
+        id: get_version
+        uses: battila7/get-version-action@v2
+      - name: Bump Release Version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.get_version.outputs.version-without-v }}
+          version-fragment: 'feature'
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
@@ -51,4 +63,4 @@ jobs:
           artifacts: "build.zip"
           bodyFile: "body.md"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "v1.4"
+          tag: "v${{ steps.bump_version.outputs.next-version }}"
