@@ -24,7 +24,7 @@ jobs:
       - name: Build Files
         run: |
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
-            platform = "${platform/\"/""}"
+            platform=${platform/\"/""}
             echo "Build OVAL Definitions Files for $platform"
             if [ ! -z "$platform" ]; then
               for directory in $(ls ./repository/definitions); do
