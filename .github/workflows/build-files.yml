@@ -26,9 +26,10 @@ jobs:
         run: python ./scripts/web_get_repository_stats.py --platform > platforms.json
       - name: Get All Classes
         run: python ./scripts/web_get_repository_stats.py --class > classes.json
+      - name: Create Output Directory
+        run: mkdir ./output-files
       - name: Build Individual Files
         run: |
-          mkdir ./output-files
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
             platform=`sed -e 's/^"//' -e 's/"$//' <<<"$platform"`
             let platform_filename=`sed -e 's/\s/_/' <<<"$platform"`
@@ -44,9 +45,10 @@ jobs:
               done
             fi
           done
-          
-          echo "Build All OVAL Definitions File"
-          python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
+      - name: Build All Definitions File
+        run: python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
+      - name: Package All Files
+        run: |
           ls -lah ./output-files
           zip -r build.zip ./output-files
           echo "Release!" > body.md
