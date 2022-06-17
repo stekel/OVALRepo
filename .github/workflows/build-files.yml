@@ -30,6 +30,7 @@ jobs:
         run: mkdir ./output-files
       - name: Build Individual Files
         run: |
+          cat classes.json
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
             platform=`sed -e 's/^"//' -e 's/"$//' <<<"$platform"`
             platform_filename=`sed -e 's/ /_/g' <<<"$platform"`
