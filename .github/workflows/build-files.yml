@@ -24,19 +24,22 @@ jobs:
         run: python ./scripts/web_update_indexes.py > /dev/null
       - name: Get All Platforms
         run: python ./scripts/web_get_repository_stats.py --platform > platforms.json
-      - name: Build Files
+      - name: Get All Classes
+        run: python ./scripts/web_get_repository_stats.py --class > classes.json
+      - name: Build Individual Files
         run: |
           mkdir ./output-files
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
             platform=`sed -e 's/^"//' -e 's/"$//' <<<"$platform"`
+            let platform_filename=`sed -e 's/\s/_/' <<<"$platform"`
             echo "Build OVAL Definitions Files for $platform"
             if [ ! -z "$platform" ]; then
-              for directory in $(ls ./repository/definitions); do
-                if [ -d "./repository/definitions/$directory" ]; then
-                    echo "python ./scripts/build_oval_definitions_file.py --outfile=./output-files/5.10/$directory/$platform.xml --max_schema_version=5.10 --platform=$platform --class=$directory"
-                    python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.10/$directory/$platform.xml" --max_schema_version=5.10 --platform="$platform" --class=$directory
-                    python ./scripts/build_oval_definitions_file.py --outfile="./output-file/5.11.1/$directory/$platform.xml" --max_schema_version=5.11.1 --platform="$platform" --class=$directory
-                    python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.11.2/$directory/$platform.xml" --max_schema_version=5.11.2 --platform="$platform" --class=$directory
+              cat classes.json | jq '.RESULTS.classes | keys[]' | while read class; do
+                class=`sed -e 's/^"//' -e 's/"$//' <<<"$class"`
+                if [ ! -z "$class" ]; then
+                    python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.10/$class/$platform_filename.xml" --max_schema_version=5.10 --platform="$platform" --class=$class
+                    python ./scripts/build_oval_definitions_file.py --outfile="./output-file/5.11.1/$class/$platform_filename.xml" --max_schema_version=5.11.1 --platform="$platform" --class=$class
+                    python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.11.2/$class/$platform_filename.xml" --max_schema_version=5.11.2 --platform="$platform" --class=$class
                 fi
               done
             fi
