@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir ./output-files
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
-            platform=${sed -e 's/^"//' -e 's/"$//' <<<"$platform" }
+            platform=`sed -e 's/^"//' -e 's/"$//' <<<"$platform"`
             echo "Build OVAL Definitions Files for $platform"
             if [ ! -z "$platform" ]; then
               for directory in $(ls ./repository/definitions); do
