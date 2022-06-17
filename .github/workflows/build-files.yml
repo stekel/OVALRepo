@@ -31,7 +31,7 @@ jobs:
       - name: Build Individual Files
         run: |
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
-            platform=`sed -e 's/^"//' -e 's/"$//' <<<"$platform"`
+            platform=`sed -e 's/^"//' -e 's/"$//' -e 's/\// /' <<<"$platform"`
             platform_filename=`sed -e 's/ /_/g' <<<"$platform"`
             echo "Build OVAL Definitions Files for $platform"
             if [ ! -z "$platform" ]; then
