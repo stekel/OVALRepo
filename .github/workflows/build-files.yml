@@ -9,22 +9,23 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - run: sudo apt install -y python3-lxml jq
+      - name: Install OS Dependencies
+        run: sudo apt install -y python3-lxml jq
       - uses: actions/setup-python@v3
         with:
           python-version: '3.x'
           architecture: 'x64'
+      - name: Install Python Dependencies
+        run: python -m pip install -r scripts/requirements.txt
       - name: Build Web Indexes
-        run: | 
-          python -m pip install -r scripts/requirements.txt
-          mkdir ./output-files
-          python ./scripts/web_update_indexes.py > /dev/null
+        run: python ./scripts/web_update_indexes.py > /dev/null
       - name: Get All Platforms
         run: python ./scripts/web_get_repository_stats.py --platform > platforms.json
       - name: Build Files
         run: |
+          mkdir ./output-files
           cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
-            platform=${sed -i 's/\"/""' $platform}
+            platform=${sed -i 's/\"//g' $platform}
             echo "Build OVAL Definitions Files for $platform"
             if [ ! -z "$platform" ]; then
               for directory in $(ls ./repository/definitions); do
@@ -45,7 +46,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           artifacts: "build.zip"
           bodyFile: "body.md"
