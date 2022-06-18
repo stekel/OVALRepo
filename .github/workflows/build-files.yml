@@ -58,6 +58,8 @@ jobs:
       - name: 'Get Previous tag'
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 1.0.0
       - name: Bump Release Version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
