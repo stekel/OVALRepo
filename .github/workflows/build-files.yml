@@ -34,19 +34,19 @@ jobs:
             platform=`sed -e 's/^"//' -e 's/"$//' -e 's/\// /' <<<"$platform"`
             platform_filename=`sed -e 's/ /_/g' <<<"$platform"`
             echo "Build OVAL Definitions Files for $platform"
-            if [ ! -z "$platform" ]; then
-              cat classes.json | jq '.RESULTS.class | keys[]' | while read class; do
-                class=`sed -e 's/^"//' -e 's/"$//' <<<"$class"`
-                if [ ! -z "$class" ]; then
-                    mkdir -p "./output-files/5.10/$class/"
-                    mkdir -p "./output-files/5.11.1/$class/"
-                    mkdir -p "./output-files/5.11.2/$class/"
-                    python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.10/$class/$platform_filename.xml" --max_schema_version=5.10 --platform="$platform" --class=$class > /dev/null
-                    python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.11.1/$class/$platform_filename.xml" --max_schema_version=5.11.1 --platform="$platform" --class=$class > /dev/null
-                    python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.11.2/$class/$platform_filename.xml" --max_schema_version=5.11.2 --platform="$platform" --class=$class > /dev/null
-                fi
-              done
-            fi
+            #if [ ! -z "$platform" ]; then
+              #cat classes.json | jq '.RESULTS.class | keys[]' | while read class; do
+                #class=`sed -e 's/^"//' -e 's/"$//' <<<"$class"`
+                #if [ ! -z "$class" ]; then
+                    #mkdir -p "./output-files/5.10/$class/"
+                    #mkdir -p "./output-files/5.11.1/$class/"
+                    #mkdir -p "./output-files/5.11.2/$class/"
+                    #python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.10/$class/$platform_filename.xml" --max_schema_version=5.10 --platform="$platform" --class=$class > /dev/null
+                    #python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.11.1/$class/$platform_filename.xml" --max_schema_version=5.11.1 --platform="$platform" --class=$class > /dev/null
+                    #python ./scripts/build_oval_definitions_file.py --outfile="./output-files/5.11.2/$class/$platform_filename.xml" --max_schema_version=5.11.2 --platform="$platform" --class=$class > /dev/null
+                #fi
+              #done
+            #fi
           done
       - name: Build All Definitions File
         run: python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
@@ -55,14 +55,14 @@ jobs:
           ls -lah ./output-files
           zip -r build.zip ./output-files
           echo "Release!" > body.md
-      - name: Get Last Release Version
-        id: get_version
-        uses: battila7/get-version-action@v2
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
       - name: Bump Release Version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{ steps.get_version.outputs.version-without-v }}
+          current-version: ${{ steps.previoustag.outputs.tag }}
           version-fragment: 'feature'
       - name: Create Release
         uses: ncipollo/release-action@v1
