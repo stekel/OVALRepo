@@ -64,7 +64,7 @@ jobs:
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: $(sed -e 's/^v//' <<<"${{ steps.previoustag.outputs.tag }}")
+          current-version: ${{ steps.previoustag.outputs.tag }}
           version-fragment: 'feature'
       - name: Create Release
         uses: ncipollo/release-action@v1
@@ -74,4 +74,4 @@ jobs:
           artifacts: "build.zip"
           bodyFile: "body.md"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "v${{ steps.bump_version.outputs.next-version }}"
+          tag: "${{ steps.bump_version.outputs.next-version }}"
