@@ -45,7 +45,7 @@ jobs:
                       platform_filename=`sed -e 's/ /_/g' <<<"$platform"`
                       echo "Build OVAL Definitions Files for Platform: $platform"
                       if [ ! -z "$platform" ]; then
-                          echo "python ./scripts/build_oval_definitions_file.py --outfile=\"./output-files/$version/$class/$platform_filename.xml\" --max_schema_version=$version --platform=\"$platform\" --class=$class > /dev/null"
+                          python ./scripts/build_oval_definitions_file.py --outfile="./output-files/$version/$class/$platform_filename.xml" --max_schema_version=$version --platform="$platform" --class=$class > /dev/null
                       fi
                     done
 
@@ -54,7 +54,7 @@ jobs:
                       family_filename=`sed -e 's/ /_/g' <<<"$family"`
                       echo "Build OVAL Definitions Files for Family: $family"
                       if [ ! -z "$family" ]; then
-                          echo "python ./scripts/build_oval_definitions_file.py --outfile=\"./output-files/$version/$class/$family_filename.xml\" --max_schema_version=$version --family=\"$family\" --class=$class > /dev/null"
+                          python ./scripts/build_oval_definitions_file.py --outfile="./output-files/$version/$class/$family_filename.xml" --max_schema_version=$version --family="$family" --class=$class > /dev/null
                       fi
                     done
                 fi
