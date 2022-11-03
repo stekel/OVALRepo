@@ -33,39 +33,33 @@ jobs:
       - name: Build Individual Files
         run: |
           declare -a versions=("5.10" "5.11.1" "5.11.2")
-          mkdir ./output-files/5.10
-          mkdir ./output-files/5.11.1
-          mkdir ./output-files/5.11.2
-          touch ./output-files/5.10/test.xml
-          touch ./output-files/5.11.1/test.xml
-          touch ./output-files/5.11.2/test.xml
-#          for version in "${versions[@]}"
-#          do
-#            cat classes.json | jq '.RESULTS.class | keys[]' | while read class; do
-#                class=`sed -e 's/^"//' -e 's/"$//' <<<"$class"`
-#                if [ ! -z "$class" ]; then
-#                    mkdir -p "./output-files/$version/$class/"
-#
-#                    cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
-#                      platform=`sed -e 's/^"//' -e 's/"$//' -e 's/\// /' <<<"$platform"`
-#                      platform_filename=`sed -e 's/ /_/g' <<<"$platform"`
-#                      echo "Build OVAL Definitions Files for Platform: $platform"
-#                      if [ ! -z "$platform" ]; then
-#                          python ./scripts/build_oval_definitions_file.py --outfile="./output-files/$version/$class/$platform_filename.xml" --max_schema_version=$version --platform="$platform" --class=$class > /dev/null
-#                      fi
-#                    done
-#
-#                    cat families.json | jq '.RESULTS.family | keys[]' | while read family; do
-#                      family=`sed -e 's/^"//' -e 's/"$//' -e 's/\// /' <<<"$family"`
-#                      family_filename=`sed -e 's/ /_/g' <<<"$family"`
-#                      echo "Build OVAL Definitions Files for Family: $family"
-#                      if [ ! -z "$family" ]; then
-#                          python ./scripts/build_oval_definitions_file.py --outfile="./output-files/$version/$class/$family_filename.xml" --max_schema_version=$version --family="$family" --class=$class > /dev/null
-#                      fi
-#                    done
-#                fi
-#              done
-#          done
+          for version in "${versions[@]}"
+          do
+            cat classes.json | jq '.RESULTS.class | keys[]' | while read class; do
+                class=`sed -e 's/^"//' -e 's/"$//' <<<"$class"`
+                if [ ! -z "$class" ]; then
+                    mkdir -p "./output-files/$version/$class/"
+
+                    cat platforms.json | jq '.RESULTS.platforms | keys[]' | while read platform; do
+                      platform=`sed -e 's/^"//' -e 's/"$//' -e 's/\// /' <<<"$platform"`
+                      platform_filename=`sed -e 's/ /_/g' <<<"$platform"`
+                      echo "Build OVAL Definitions Files for Platform: $platform"
+                      if [ ! -z "$platform" ]; then
+                          python ./scripts/build_oval_definitions_file.py --outfile="./output-files/$version/$class/$platform_filename.xml" --max_schema_version=$version --platform="$platform" --class=$class > /dev/null
+                      fi
+                    done
+
+                    cat families.json | jq '.RESULTS.family | keys[]' | while read family; do
+                      family=`sed -e 's/^"//' -e 's/"$//' -e 's/\// /' <<<"$family"`
+                      family_filename=`sed -e 's/ /_/g' <<<"$family"`
+                      echo "Build OVAL Definitions Files for Family: $family"
+                      if [ ! -z "$family" ]; then
+                          python ./scripts/build_oval_definitions_file.py --outfile="./output-files/$version/$class/$family_filename.xml" --max_schema_version=$version --family="$family" --class=$class > /dev/null
+                      fi
+                    done
+                fi
+              done
+          done
       - name: Build All Definitions File
         run: python ./scripts/build_oval_definitions_file.py --all_definitions --outfile ./output-files/oval.xml
       - name: Package All Files
@@ -91,7 +85,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          artifacts: "*.*"
+          artifacts: "*.zip"
           bodyFile: "body.md"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.bump_version.outputs.next-version }}
