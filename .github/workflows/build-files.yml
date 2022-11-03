@@ -85,10 +85,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          artifacts:
-            - "5.10.zip"
-            - "5.11.1.zip"
-            - "5.11.2.zip"
+          artifacts: "*.zip"
           bodyFile: "body.md"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.bump_version.outputs.next-version }}
