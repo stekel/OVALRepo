@@ -65,7 +65,9 @@ jobs:
       - name: Package All Files
         run: |
           ls -lah ./output-files
-          zip -r build.zip ./output-files
+          zip -r 5.10.zip ./output-files/5.10
+          zip -r 5.11.1.zip ./output-files/5.11.1
+          zip -r 5.11.2.zip ./output-files/5.11.2
           echo "Release!" > body.md
       - name: 'Get Previous tag'
         id: previoustag
